@@ -76,10 +76,6 @@ async function isAdmin(channelId, userId) {
 
 		// Проверяем, есть ли userId в списке админов
 		const isUserAdmin = participants.participants.some(participant => {
-			console.log(participant.userId, 'participant')
-			console.log(participant.userId, 'userId')
-			console.log(participant.userId === userId, 'IsuserId')
-
 			return participant.userId.value === userId.value
 		})
 		console.log(isUserAdmin, 'isUserAdmin')
@@ -101,7 +97,6 @@ async function handleNewMessage(event) {
 		const chatUsername = message.chat.username
 
 		const admin = await isAdmin(chatId, id)
-		console.log(admin, 'admin')
 
 		console.log(chatUsername, 'chatUsername')
 
@@ -109,8 +104,9 @@ async function handleNewMessage(event) {
 		// console.log(user, 'user-info')
 
 		// Проверяем, есть ли канал в списке
-		if (!channels.includes(chatTitle)) return
 
+		if (!channels.includes(chatTitle)) return
+		if (admin) return
 		// Проверяем, что сообщение пришло из комментариев канала
 		if (!message.chatId || !message.isChannel) return
 		const sender = await message.getSender()
