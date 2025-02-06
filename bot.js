@@ -1,3 +1,4 @@
+const express = require('express')
 const { TelegramClient } = require('telegram')
 const { StringSession } = require('telegram/sessions')
 const readline = require('readline')
@@ -13,11 +14,15 @@ const apiId = Number(process.env.API_KENDY)
 const apiHash = process.env.APPI_HASH_KENDY
 
 const sessionFilePath = 'ssesinon-keyndy.txt'
+
 const sessionString = fs.existsSync(sessionFilePath)
 	? fs.readFileSync(sessionFilePath, 'utf8')
 	: ''
 
+console.log(sessionString, 'sses')
+
 let stringSession = new StringSession(sessionString)
+
 const channels = ['channel_1r', 'channel_2r', 'Channel_1 Chat']
 
 const rl = readline.createInterface({
@@ -46,10 +51,9 @@ async function startBot() {
 			),
 		onError: err => console.log(err),
 	})
-
-	console.log('✅ Бот запущен!')
 	console.log('Сохраните эту строку сессии в .env:')
 	console.log(client.session.save())
+
 	const messageText = 'Привет! Это тестовая рассылка 😊'
 	const delayBetweenMessages = 3000 // ⏳ Задержка между отправками (в миллисекундах)
 	// await checkAllComments('Channel_1 Chat', client)
@@ -166,7 +170,19 @@ async function handleNewMessage(event) {
 		console.error('❌ Ошибка:', error)
 	}
 }
-startBot()
+// startBot()
+
+const app = express()
+const port = process.env.PORT || 3000
+
+app.get('/', (req, res) => {
+	res.send('Bot is running')
+})
+
+app.listen(port, () => {
+	console.log(`Bot listening on port ${port}`)
+	startBot() // Запуск Telegram-бота
+})
 
 // +27740906938
 // +27740906938
